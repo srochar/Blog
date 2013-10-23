@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>    Serial arduino
+</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+            <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/normalize.css">
+        <link href='//fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/main.css">
+
+    <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/blog.css">
+    <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/github.css">
+        <script src="http://alumnos.informatica.utem.cl/~srocha/theme/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div id="wrapper">
+<header id="sidebar" class="side-shadow">
+    <hgroup id="site-header">
+        <a id="site-title" href="http://alumnos.informatica.utem.cl/~srocha"><h1><i class="icon-desktop"></i> De todo un Seba</h1></a>
+        <p id="site-desc"></p>
+    </hgroup>
+    <nav>
+        <ul id="nav-links">
+                <li><a href="http://alumnos.informatica.utem.cl/~srocha/">Blog</a></li>
+                <li><a href="http://alumnos.informatica.utem.cl/~srocha/pages/contacto">Quién soy</a></li>
+        </ul>
+    </nav>
+<footer id="site-info">
+    <p>
+        Proudly powered by <a href="http://getpelican.com/" target="pelican">Pelican</a> and <a href="http://python.org/" target="python">Python</a>. Theme by <a href="https://github.com/hdra/pelican-cait" target="github">hndr</a>.
+    </p>
+    <p>
+        Textures by <a href="http://subtlepatterns.com/" target="subtlepatterns">Subtle Pattern</a>. Font Awesome by <a href="http://fortawesome.github.io/Font-Awesome/" target="github">Dave Grandy</a>.
+    </p>
+</footer></header>
+    <div id="post-container">
+        <ol id="post-list">
+            <li>
+                <article class="post-entry">
+                    <header class="entry-header">
+                        <time class="post-time" datetime="2013-08-10T00:00:00" pubdate>
+                            sáb 10 agosto 2013
+                        </time>
+                        <a href="http://alumnos.informatica.utem.cl/~srocha/serial-arduino.html" rel="bookmark"><h1>Serial arduino</h1></a>
+                    </header>
+
+                    <section class="post-content">
+                        <p>Si ya probaste el famoso <a href="http://alumnos.informatica.utem.cl/~srocha/primeros-pasos-arduino.html" title="Primeros Pasos Arduino"><em>hola mundo</em></a> en arduino (encender y apagar el led) acá les traigo algo un poco más avanzado: controlar cuándo encender el led, a través de la comunicación serial.</p>
+<p>En el momemto que conectamos el cable usb de la arduino al computador, se genera un medio de comunación entre ambos dispositivos. El medio para la arduino se llama <em>Serial</em> y en el computador se escucha el puerto <em>COM</em>. Hay distintos puertos <em>COM(COM1,COM2, etc)</em>, según el que se haya creado al momento de conectar la arduino. </p>
+<p>Se puede enviar información a la arduino desde el pc o viceversa.</p>
+<p>Lo importante es como explotar la interacción, para ello el software de arduino tiene un programa que escucha el puerto <em>COM</em> y también tiene la posibilidad de enviar información por él. Para la versión 1.0.5 del software con <em>crtl+m</em> se abre el programa. 
+<img alt="COM3" src="http://alumnos.informatica.utem.cl/~srocha/imagenes/Serial%20Arduino/pantallaSerial.jpg" title="Serial COM" /></p>
+<p>Es una pequeńa ventana que tiene varias opciones; enviar información, recibir información y cambiar el <em>speed</em>(del que hablaré más adelante). Esto sería por parte del software, veamos la arduino:</p>
+<p>Decirle a la arduino que habilite el medio de comunicación <em>Serial</em> es muy sencillo, en <em>setup()</em> iniciamos la variable así:</p>
+<div class="highlight"><pre><span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Ojo con la mayúscula al principio es importante. Una vez con eso listo, ya arduino sabe a que puerto escuchar y/o enviar información(<em>speed =9600</em>). Para enviar información se utiliza <em>Serial.print("texto")</em>, se pueden enviar los valores de las variables también.</p>
+<p>Falta sólo escuchar datos, esto se hace con <em>Serial.read()</em> que retorna un char, o sea, sólo carácter. Antes de leer el valor debemos asegurarnos que viene con información. <em>Serial.available()</em> es una función que retorna 0 o un valor mayor a 0. Sí es 0 significa que no hay información, en cambio si es mayor a 0 <em>Serial.read()</em> capturará el carácter.</p>
+<p>Listo, ya conocemos como enviar y recibir datos en ambos dispositivos, hagamos una prueba:</p>
+<div class="highlight"><pre><span class="kt">char</span> <span class="n">info</span><span class="p">;</span>
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Esto lo envia arduino&quot;</span><span class="p">);</span>
+    <span class="k">if</span><span class="p">(</span> <span class="n">Serial</span><span class="p">.</span><span class="n">available</span><span class="p">()</span> <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;Esto usted envio &quot;</span><span class="p">);</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">info</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Cargamos a la arduino y habilitamos la comunicación serial en el software(<em>crtl+m</em>). Enviaremos un '1, h, 8 y p' a la arduino y verán que los recibe :).</p>
+<p>Mi resultado: </p>
+<p><img alt="Serial resultado" src="http://alumnos.informatica.utem.cl/~srocha/imagenes/Serial%20Arduino/resultado.jpg" title="Mi resultado" /></p>
+<p>Pero hagamos algo entretenido; juguemos con un led conectado al pin 13. Si recibe un 1 encienda un led y 0 apaga el led e informe qué hizo con el led. </p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">pinLed</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">info</span><span class="p">;</span>
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+    <span class="n">pinMode</span><span class="p">(</span><span class="n">pinLed</span><span class="p">,</span><span class="n">OUTPUT</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">Serial</span><span class="p">.</span><span class="n">available</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">// si existe llega un dato</span>
+    <span class="p">{</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">Serial</span><span class="p">.</span><span class="n">read</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">info</span> <span class="o">==</span> <span class="sc">&#39;1&#39;</span><span class="p">)</span> <span class="c1">// se compara con un caracter</span>
+        <span class="p">{</span>
+            <span class="n">digitalWrite</span><span class="p">(</span><span class="n">pinLed</span><span class="p">,</span><span class="n">HIGH</span><span class="p">);</span>
+            <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Se encendio el led&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">info</span> <span class="o">==</span> <span class="sc">&#39;0&#39;</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">digitalWrite</span><span class="p">(</span><span class="n">pinLed</span><span class="p">,</span><span class="n">LOW</span><span class="p">);</span>
+            <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">&quot;Se apaga el led&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>¿Y para qué sirve esto ?. En realidad para muchas cosas; puede controlar la arduino con python por ejemplo o alguien que le envie información por el medio serial. Si tengo tiempo les muestro como juntar python + arduino.</p>
+                    </section>
+                    <hr/>
+                    <aside class="post-meta">
+                        <p>Category: <a href="http://alumnos.informatica.utem.cl/~srocha/category/misc.html">misc</a></p>
+                        <p>Tags: <a href="http://alumnos.informatica.utem.cl/~srocha/tag/serial.html">Serial</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/arduino.html">arduino</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/comunicacion.html">comunicacion</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/com.html">COM</a>, </p>
+                    </aside>
+                    <hr/>
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'detodounseba';
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+                </article>
+            </li>
+        </ol>
+    </div>
+        </div>
+
+<script>
+    var _gaq=[['_setAccount','UA-4505-7407'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+        <script src="http://alumnos.informatica.utem.cl/~srocha/theme/js/main.js"></script>
+    </body>
+</html>

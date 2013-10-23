@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>    Jugando con un Servo y Potenciómetro en Arduino
+</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+            <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/normalize.css">
+        <link href='//fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/main.css">
+
+    <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/blog.css">
+    <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/github.css">
+        <script src="http://alumnos.informatica.utem.cl/~srocha/theme/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div id="wrapper">
+<header id="sidebar" class="side-shadow">
+    <hgroup id="site-header">
+        <a id="site-title" href="http://alumnos.informatica.utem.cl/~srocha"><h1><i class="icon-desktop"></i> De todo un Seba</h1></a>
+        <p id="site-desc"></p>
+    </hgroup>
+    <nav>
+        <ul id="nav-links">
+                <li><a href="http://alumnos.informatica.utem.cl/~srocha/">Blog</a></li>
+                <li><a href="http://alumnos.informatica.utem.cl/~srocha/pages/contacto">Quién soy</a></li>
+        </ul>
+    </nav>
+<footer id="site-info">
+    <p>
+        Proudly powered by <a href="http://getpelican.com/" target="pelican">Pelican</a> and <a href="http://python.org/" target="python">Python</a>. Theme by <a href="https://github.com/hdra/pelican-cait" target="github">hndr</a>.
+    </p>
+    <p>
+        Textures by <a href="http://subtlepatterns.com/" target="subtlepatterns">Subtle Pattern</a>. Font Awesome by <a href="http://fortawesome.github.io/Font-Awesome/" target="github">Dave Grandy</a>.
+    </p>
+</footer></header>
+    <div id="post-container">
+        <ol id="post-list">
+            <li>
+                <article class="post-entry">
+                    <header class="entry-header">
+                        <time class="post-time" datetime="2013-08-03T00:00:00" pubdate>
+                            sáb 03 agosto 2013
+                        </time>
+                        <a href="http://alumnos.informatica.utem.cl/~srocha/jugando-con-un-servo-y-potenciometro-en-arduino.html" rel="bookmark"><h1>Jugando con un Servo y Potenci&oacute;metro en Arduino</h1></a>
+                    </header>
+
+                    <section class="post-content">
+                        <p>En este post vamos a controlar un mini-servo a través de un potenciómetro con una ayudita de nuestra placa arduino.</p>
+<p>¿Qué necesitamos?:</p>
+<ul>
+<li>1 protobard</li>
+<li>1 Servo</li>
+<li>1 Potenciómetro</li>
+<li>Cables</li>
+<li>1 Arduino, mi caso UNO</li>
+</ul>
+<p>El potenciómetro es un microcontrolador. Tiene 3 cables, uno es la alimentación que es de 5v, el otro es tierra (GND) y por último el que nos entrega las lecturas, este se conecta a un pin análogo. Y por qué un pin análogo, este dispositivo entrega valores entre 0 y 1023 (son 10 bit, que representan 2^10 - 1 valores) que se pueden captar sólo por los pines análogas.</p>
+<p>Nuestro otro dispositivo es el mini-servo, lo mismo que el anterior posee 3 cables, la alimentación (5V), tierra y el tercero nos servirá para moverlo, se conecta al pin 9. Para controlar el servo utilizaremos una librería de arduino llamada <strong>Servo.h</strong> que explicaremos más adelante cómo funciona.</p>
+<p>El procedimiento es fácil leeremos los valores que tenga el potenciómetro y se los enviaremos al servo. Pero no es tan fácil llevarlo a código . Vamos a ir por parte, primero controlaremos nuestro potenciómetro.</p>
+<p>Realizamos las conexiones básicas: 
+<img alt="Conexión" src="http://alumnos.informatica.utem.cl/~srocha/imagenes/PotenciometroServo/cirPot.jpg" title="Circuito Potenciometro" /></p>
+<p>¿Qué vamos a hacer?</p>
+<p>Simple, obtener los valor del potenciómetro y mostrarlos por puerto Serial.</p>
+<p>¿Serial? Sí, es nuestro medio de comunicación, donde la arduino nos muestra la información que nosotros queramos.</p>
+<p>Y nuestro código serial el siguiente:</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">potePin</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">poteVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">poteVal</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">potePin</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;El valor del potenciometro: &quot;</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">poteVal</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Primeras dos líneas:</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">potePin</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">poteVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+
+
+<p>Creo que son fáciles de leer, en la variable entera potePin le asignamos el pin al que conectamos a la arduino. En poteVal, guardaremos los valores entre 0 y 1023.</p>
+<p>Setup()</p>
+<div class="highlight"><pre><span class="n">Seria</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Le decimos a la arduino que habilite la comunicación serial a través del speed 9600.</p>
+<p>Ahora viene el procedimiento loop, como su nombre en inglés lo dice, tiene el objetivo de ir repitiendo todo el bloque de códigos que estén adentro.</p>
+<div class="highlight"><pre><span class="n">poteVal</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">potePin</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;El valor del potenciometro: &quot;</span><span class="p">);</span>
+<span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">potVal</span><span class="p">);</span>
+<span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</pre></div>
+
+
+<p>AnalogRead(int), es un función de arduino que nos entregalos valores del pin que le enviemos. En este caso del pin A0. PotVal aginamos el valor que nos entrega analogRead.</p>
+<p>Serial.print imprime por serial el string que le enviemos :), o una variable, eso hacen las dos siguientes líneas.</p>
+<p>Delay() es una pequeña pausa en milisengundos, muy importante para que el potenciometro no colapse con tanto dato que se le pida.</p>
+<p>Ahora que entendemos qué hace el código se lo enviamos a la arduino y habilitamos la comunicación serial. Resultados: </p>
+<p><img alt="Serial" src="http://alumnos.informatica.utem.cl/~srocha/imagenes/PotenciometroServo/resultadosPote.jpg" title="Resultados Potenciometro" /></p>
+<p>Tiene un problema este código, más bien sus resultados. Ponganse a análizar los valores que entrega portVal, si uno no mueve el potenciómetro varian los valores levemente en más o menos 1 sin que nosotros lo toquemos. Esto se llama ruido generado por el circuito. Pero tranquilos lo vamos a solucionar.</p>
+<p>Agregaremos un "filtro" un arreglo de 10 elementos y calcularemos su promedio y luego lo mostraremos por serial, así vamos a tener un mejor control con el ruido que se forma. Se mantiene el mismo circuito.</p>
+<p>Nuevo código:</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">potePin</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">poteVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">poteProm</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">arreglopote</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">totalpote</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">totalpote</span> <span class="o">-=</span> <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">A0</span><span class="p">);</span>
+  <span class="n">totalpote</span> <span class="o">+=</span> <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">poteProm</span> <span class="o">=</span> <span class="n">totalpote</span><span class="o">/</span><span class="mi">10</span><span class="p">;</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;El valor del potenciometro: &quot;</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">poteProm</span><span class="p">);</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>¿ Se entiende ?. Vamos con la explicación.</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">poteProm</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">arreglopote</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">totalpote</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre></div>
+
+
+<p>Aparecieron nuevas variables. <em>PoteProm</em> guarda el promedio de las lecturas. <em>i</em> es el simple iterador. <em>Arreglopote</em> es un arreglo donde se guardaran los 10 valores. TotalPote va sumando los valores para luego calcular el promedio.</p>
+<div class="highlight"><pre><span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
+</pre></div>
+
+
+<p>El for inicia los valores del arreglo en 0, luego vuelve el iterador a 0.</p>
+<p>Loop():</p>
+<div class="highlight"><pre><span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">totalpote</span> <span class="o">-=</span> <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">A0</span><span class="p">);</span>
+  <span class="n">totalpote</span> <span class="o">+=</span> <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">poteProm</span> <span class="o">=</span> <span class="n">totalpote</span><span class="o">/</span><span class="mi">10</span><span class="p">;</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;El valor del potenciometro: &quot;</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">poteProm</span><span class="p">);</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>En loop es donde realizamos más modificaciones, si tratan de entender un poco el código se daran cuenta que sólo se calcula el promedio de 10 valores. Verifiquen los resultados.</p>
+<p>Ojo si aumentamos el largo del arrelgo tendremos valores más centrado y con menor "ruido" que se forma. Tener en cuenta igual que seran más valores que leer y se demorará más. Hasta acá llegamos con nuestro potenciómetro, vamos por el mini-servo :).</p>
+<p>Para jugar con el mini-servo vamos a darles algunos ángulos básico, que gire 20º,60º,100º y 150º una y otra vez.</p>
+<p>Las conexiones:</p>
+<p><img alt="Servo" src="http://alumnos.informatica.utem.cl/~srocha/imagenes/PotenciometroServo/cirServo.jpg" title="Circuito Servo" /></p>
+<p>Para el código nos va ayudar la librería <strong>Servo.h</strong>. Instanciamos nuestro objeto de la librería después damos las acciones que tenga este objeto(iniciar, mover, leer, etc).</p>
+<div class="highlight"><pre><span class="cp">#include &lt;Servo.h&gt;</span>
+
+<span class="kt">int</span> <span class="n">servoPin</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+<span class="n">Servo</span> <span class="n">miServo</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">miServo</span><span class="p">.</span><span class="n">attach</span><span class="p">(</span><span class="n">servoPin</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">miServo</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+  <span class="n">miServo</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+  <span class="n">miServo</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+  <span class="n">miServo</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>                                          
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Si lo compilan y envían a la arudino les debería funcionar y mover el servo como les indique antes.</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">servoPin</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+<span class="n">Servo</span> <span class="n">miServo</span><span class="p">;</span>
+</pre></div>
+
+
+<p>La primera asignamos el pin donde conectamos el servo. Luego la parte más importante, creamos un objeto <em>miServo</em> que se puede hacer varias acciones, la primera es decirle a que pin esta conectado.</p>
+<div class="highlight"><pre><span class="n">miServo</span><span class="p">.</span><span class="n">attach</span><span class="p">(</span><span class="n">servoPin</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Ahora es como si ya tuviera vida. </p>
+<div class="highlight"><pre><span class="n">miServo</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+<span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="n">miServo</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span>
+<span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="n">miServo</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+<span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+<span class="n">miServo</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">150</span><span class="p">);</span>
+<span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Útilizamos la acción write, esta mueve el servo al ángulo que se envía. Tiene que ser un valor de 0 a 180, si esta fuera de ese rango lo transforma.</p>
+<p>Esto sería para nuestro servo, la librería <strong>Servo.h</strong> nos ayuda mucho y como ven es muy sencillo controlar. Ahora probemos los dispositivos al mismo tiempo :D.</p>
+<p>Circuito: 
+<img alt="Circuito final" src="http://alumnos.informatica.utem.cl/~srocha/imagenes/PotenciometroServo/cirTotal.jpg" title="Circuito final" /></p>
+<p>El código es una mezcla de ambos, optener el valor del potenciómetro y enviarlo al servo, pero recodemos que los valores varían de 0 a 1023 con un simple <em>map()</em>. Una función de arduino que cambia un valor en la proporción que indiquemos, o sea 0 sería 0º y 1023 son 180º.</p>
+<div class="highlight"><pre><span class="cp">#include &lt;Servo.h&gt;</span>
+<span class="cm">/*===========Servo===========*/</span>
+<span class="kt">int</span> <span class="n">servoPin</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+<span class="n">Servo</span> <span class="n">miServo</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">angulo</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="cm">/*===========Potenciometro===*/</span>
+<span class="kt">int</span> <span class="n">potePin</span> <span class="o">=</span> <span class="n">A0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">poteVal</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">poteProm</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">arreglopote</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">totalpote</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">miServo</span><span class="p">.</span><span class="n">attach</span><span class="p">(</span><span class="n">servoPin</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">9600</span><span class="p">);</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">totalpote</span> <span class="o">-=</span> <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">analogRead</span><span class="p">(</span><span class="n">A0</span><span class="p">);</span>
+  <span class="n">totalpote</span> <span class="o">+=</span> <span class="n">arreglopote</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span><span class="p">(</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="n">poteProm</span> <span class="o">=</span> <span class="n">totalpote</span><span class="o">/</span><span class="mi">10</span><span class="p">;</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;El valor del potenciometro: &quot;</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">poteProm</span><span class="p">);</span>
+    <span class="n">angulo</span> <span class="o">=</span> <span class="n">map</span><span class="p">(</span><span class="n">poteProm</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1023</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">180</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">&quot;El angulo que se mueve el servo es: &quot;</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">angulo</span><span class="p">);</span>
+    <span class="n">miServo</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">angulo</span><span class="p">);</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>                                         
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Y la lectura <strong>Serial</strong> nos muestra:
+<img alt="Serial" src="http://alumnos.informatica.utem.cl/~srocha/imagenes/PotenciometroServo/resultadosTotal.jpg" title="Resultado Final" /></p>
+<p>Listo el código funciona bien y se mueve sin problemas el servo. Dudas haganlas saber si puedo las respondo. Saludos</p>
+                    </section>
+                    <hr/>
+                    <aside class="post-meta">
+                        <p>Category: <a href="http://alumnos.informatica.utem.cl/~srocha/category/misc.html">misc</a></p>
+                        <p>Tags: <a href="http://alumnos.informatica.utem.cl/~srocha/tag/arduino.html">arduino</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/potenciometro.html">potenciometro</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/serial.html">Serial</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/serial.html">Serial</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/servo.html">servo</a>, </p>
+                    </aside>
+                    <hr/>
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'detodounseba';
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+                </article>
+            </li>
+        </ol>
+    </div>
+        </div>
+
+<script>
+    var _gaq=[['_setAccount','UA-4505-7407'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+        <script src="http://alumnos.informatica.utem.cl/~srocha/theme/js/main.js"></script>
+    </body>
+</html>

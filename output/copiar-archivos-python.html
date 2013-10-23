@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>    Copiar archivos python
+</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+            <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/normalize.css">
+        <link href='//fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/font-awesome.min.css">
+        <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/main.css">
+
+    <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/blog.css">
+    <link rel="stylesheet" href="http://alumnos.informatica.utem.cl/~srocha/theme/css/github.css">
+        <script src="http://alumnos.informatica.utem.cl/~srocha/theme/js/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div id="wrapper">
+<header id="sidebar" class="side-shadow">
+    <hgroup id="site-header">
+        <a id="site-title" href="http://alumnos.informatica.utem.cl/~srocha"><h1><i class="icon-desktop"></i> De todo un Seba</h1></a>
+        <p id="site-desc"></p>
+    </hgroup>
+    <nav>
+        <ul id="nav-links">
+                <li><a href="http://alumnos.informatica.utem.cl/~srocha/">Blog</a></li>
+                <li><a href="http://alumnos.informatica.utem.cl/~srocha/pages/contacto">Quién soy</a></li>
+        </ul>
+    </nav>
+<footer id="site-info">
+    <p>
+        Proudly powered by <a href="http://getpelican.com/" target="pelican">Pelican</a> and <a href="http://python.org/" target="python">Python</a>. Theme by <a href="https://github.com/hdra/pelican-cait" target="github">hndr</a>.
+    </p>
+    <p>
+        Textures by <a href="http://subtlepatterns.com/" target="subtlepatterns">Subtle Pattern</a>. Font Awesome by <a href="http://fortawesome.github.io/Font-Awesome/" target="github">Dave Grandy</a>.
+    </p>
+</footer></header>
+    <div id="post-container">
+        <ol id="post-list">
+            <li>
+                <article class="post-entry">
+                    <header class="entry-header">
+                        <time class="post-time" datetime="2013-08-09T00:00:00" pubdate>
+                            vie 09 agosto 2013
+                        </time>
+                        <a href="http://alumnos.informatica.utem.cl/~srocha/copiar-archivos-python.html" rel="bookmark"><h1>Copiar archivos python</h1></a>
+                    </header>
+
+                    <section class="post-content">
+                        <p>Por acá al fin, después de una semana agotadora tengo tiempo para escribir un poquito. Les traigo un problema que nos planteó una empresa. 'Copiar todos los ficheros de cierta extensión de una carpeta y sus sub-carpetas a una nueva sin borrar los archivos originales manteniendo el árbol'. Hay varios lenguajes de programación que resuelven el problema.</p>
+<p>Un amigo y yo, partimos por la consola de Windows que es lo que quería en ese momento la empresa, pero se volvio complicado, era extrańo, no se entendía el código. Lo mejor era hacer un cambio de enfoque, es por eso que utilizamos python, que es un lenguaje muy fácil de leer y comprender, además su shell interactiva nos ayuda a simplificar ciertas partes del código.</p>
+<p>La solución sería; guardar en una lista los archivos de una árbol de carpetas, haciendo un filtro de la extensión, por opción guardaremos tambien la ruta de la carpeta. Luego recorrer la lista de archivos con filtro y por cada archivo, enviar a la nueva carpeta.</p>
+<p>Para esto crearé una carpeta con varios archivos de distintas extensiones y a dentro de varias carpetas. Este sera nuestro modelo. 
+<img alt="Consola" src="http://alumnos.informatica.utem.cl/~srocha/imagenes/Copiar%20ficheros%20python/modelo.jpg" title="Consola" /></p>
+<p>Ya el primer desafío de obtener una lista de todos los ficheros que tienen las carpetas y sub-carpetas de la librería <em>os</em>, podemos ayudarnos con <em>os.walk(carpeta)</em>, la que nos devuelve una generador que se puede iterar, en cada iteración entrega una tupla con 3 valores:</p>
+<ul>
+<li>Root: La dirección de la carpeta donde estamos</li>
+<li>Dirs: Lista de todos los directorios por cada iteración</li>
+<li>Files: Lista de todos ficheros que que estan en la carpeta de iteración.</li>
+</ul>
+<p>Hagamos una prueba simple:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">carpeta</span> <span class="o">=</span> <span class="s">&#39;C:/Carpeta&#39;</span>
+<span class="k">for</span> <span class="n">root</span><span class="p">,</span><span class="n">dirs</span><span class="p">,</span><span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">carpeta</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s">&#39;Carpeta actual:&#39;</span><span class="p">,</span><span class="n">root</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">carpeta</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="k">print</span> <span class="nb">file</span>
+</pre></div>
+
+
+<p>Podemos ver que nos muestra los archivos, pero nosotros no queremos sólo el archivo, además necesitamos la dirección completa(<em>C:/Carpeta/resumen.txt</em>), acá entra en juego root, que es la dirección completa de la carperta a donde estemos. Entonces con un simple <em>root + file</em> vamos a optener la ruta completa. En <em>os.path.join</em> está la opcion de juntar estos dos string.</p>
+<p>Ahora aplicaremos el filtro para ciertas extensiones. Otra vez nos ayudará la librería <em>os</em>, tiene una función <em>splitext</em> que retorna una tupla. Esta tupla tiene una particularidad; separa el nombre del archivo, donde el último arreglo contiene la extensión (.txt, .pdf). Para acceder a la última tupla, utilizamos [-1].</p>
+<p>Ejemplo:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">extensiones</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;.pdf&#39;</span><span class="p">,</span><span class="s">&#39;.txt&#39;</span><span class="p">,</span><span class="s">&#39;.xlsx&#39;</span><span class="p">]</span>
+<span class="n">carpeta</span> <span class="o">=</span> <span class="s">&#39;C:/Carpeta&#39;</span>
+<span class="k">for</span> <span class="n">root</span><span class="p">,</span><span class="n">dirs</span><span class="p">,</span><span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">carpeta</span><span class="p">):</span>
+    <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&#39;Carpeta actual:&#39;</span><span class="p">,</span><span class="n">root</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">carpeta</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="nb">file</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">extensiones</span>
+            <span class="k">print</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="nb">file</span><span class="p">)</span>
+</pre></div>
+
+
+<p>En la lista de los archivos que se acepten, guardaremos una mini lista de dos casillas, en la primera almacenaremos la ruta completa del archivo(<em>os.path.join(root,file)</em>) y en la segunda el sub-árbol(<em>root.split(carpeta)[1]</em>). En python podemos generar lista en una línea, así que todo esto quedaria:</p>
+<div class="highlight"><pre><span class="n">carpeta</span> <span class="o">=</span> <span class="s">&#39;C:/Carpeta&#39;</span>
+<span class="n">extensiones</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;.pdf&#39;</span><span class="p">,</span><span class="s">&#39;.txt&#39;</span><span class="p">,</span><span class="s">&#39;.xlsx&#39;</span><span class="p">]</span>
+<span class="n">lista_archivos</span> <span class="o">=</span>  <span class="p">[</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="nb">file</span><span class="p">),</span><span class="n">root</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">carpeta</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span> <span class="k">for</span> <span class="n">root</span><span class="p">,</span><span class="n">dirs</span><span class="p">,</span><span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">carpeta</span><span class="p">)</span> <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="nb">file</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">extensiones</span> <span class="p">]</span>
+<span class="k">print</span> <span class="n">lista_archivos</span> 
+</pre></div>
+
+
+<p>Y en <em>lista_archivo</em> tendremos almacenado todos los pdf, txt y xlsx que esten en la carpeta "C:/Carpeta".</p>
+<p>Bien, ahora sólo nos queda enviar a la nueva carpeta de destino, para no tener colisiones (si corremos dos veces el programa a la vez) crearemos una carpeta con el nombre de la hora que se arranco el programa.</p>
+<p>Con <em>shutil</em> una librería de python copiaremos los archivos de la lista a la nueva carpeta.</p>
+<p>Código:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="n">carpeta</span> <span class="o">=</span> <span class="s">&#39;C:/Carpeta&#39;</span>
+<span class="n">destino</span> <span class="o">=</span> <span class="s">&#39;C:/Datos&#39;</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">destino</span><span class="p">):</span> <span class="c">#nos aseguramos que exista la carpeta</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">destino</span><span class="p">)</span>
+<span class="n">extensiones</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;.pdf&#39;</span><span class="p">,</span><span class="s">&#39;.txt&#39;</span><span class="p">,</span><span class="s">&#39;.xlsx&#39;</span><span class="p">]</span>
+
+<span class="n">lista_archivos</span> <span class="o">=</span>  <span class="p">[</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="nb">file</span><span class="p">),</span><span class="n">root</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">carpeta</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span> <span class="k">for</span> <span class="n">root</span><span class="p">,</span><span class="n">dirs</span><span class="p">,</span><span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">carpeta</span><span class="p">)</span> <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="nb">file</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">extensiones</span> <span class="p">]</span>
+
+<span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">-%H-%M-%S&#39;</span><span class="p">)</span> <span class="c">#genera un string con los datos de Anio-mes-dia-Hora-Minuto-Segundo</span>
+<span class="n">carpeta_destino</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">destino</span><span class="p">,</span><span class="n">now</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">carpeta_destino</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">archivo</span> <span class="ow">in</span> <span class="n">lista_archivos</span><span class="p">:</span>
+    <span class="n">carpeta_fichero</span> <span class="o">=</span> <span class="n">carpeta_destino</span> <span class="o">+</span> <span class="n">archivo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">carpeta_fichero</span><span class="p">):</span> <span class="c">#si no se a existe la carpeta la creamos</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">carpeta_fichero</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">archivo</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">carpeta_fichero</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Resultado:
+<img alt="Resultado" src="http://alumnos.informatica.utem.cl/~srocha/imagenes/Copiar%20ficheros%20python/resultado.jpg" title="Resultado" /></p>
+<p>Si somos curiosos podríamos saber cuántos archivos con extensión pdf hay almacenados en el disco c:, d: y otros. O incluso copiar todos los archivos .jpg por ejemplo del disco c y luego borrarlos :P. Se los planteo. Saludos.</p>
+                    </section>
+                    <hr/>
+                    <aside class="post-meta">
+                        <p>Category: <a href="http://alumnos.informatica.utem.cl/~srocha/category/misc.html">misc</a></p>
+                        <p>Tags: <a href="http://alumnos.informatica.utem.cl/~srocha/tag/python.html">python</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/shutil.html">shutil</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/os.html">os</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/walk.html">walk</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/copiar.html">copiar</a>, <a href="http://alumnos.informatica.utem.cl/~srocha/tag/ficheros.html">ficheros</a>, </p>
+                    </aside>
+                    <hr/>
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'detodounseba';
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+                </article>
+            </li>
+        </ol>
+    </div>
+        </div>
+
+<script>
+    var _gaq=[['_setAccount','UA-4505-7407'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+        <script src="http://alumnos.informatica.utem.cl/~srocha/theme/js/main.js"></script>
+    </body>
+</html>
