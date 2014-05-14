@@ -11,6 +11,8 @@ Existen varios tipos de arudino:
 * Arduino bluetooth
 * ... muchas más
 
+![Portada](imagenes/Primeros%20pasos/arduinos.jpg "Existen muchos")
+
 Todas son diferentes entre sí, por ejemplo la Mega una placa muy potente que intrega mucho pines, la UNO es la que yo tengo es más pequeńa y simple, muy básica. Y así van variando.
 
 Los principales pines son; los digitales, análogos, 5v, 3.3v y GND(tierra). Voy a explicar la diferencia entre análogo y digital. Tal vez la forma más simple de explicar su diferencia es imaginando un aparato. Todos o la gran mayoría hemos jugado play station, centremonos en el joystick, para mover a nuestros personajes teníamos dos opciones la parte análoga(círculo de abajo) y la digital(las flechas básica). Sí y sólo cuando precionabamos las flechas el personaje recién se movía, en cambio el análogo podiamos darles velocidad mientras más arriba más rápido iba. Entonces la parte digital toma o no un valor, expresando esto es 0 o 1, bajo o alto. La parte análogo es más completa por así decirlo, en la arduino toma valores de 0 al 1023, que son representando en 10 bits, 2^10 - 1 valores.
@@ -36,7 +38,7 @@ void loop()
 ~~~
 
 Conectamos nuestra placa al pc y cargamos el código fuente. 
-![modulo](http://alumnos.informatica.utem.cl/~srocha/imagenes/Primeros%20pasos/cargar.jpg "Software")
+![modulo](imagenes/Primeros%20pasos/cargar.jpg "Software")
 
 Bueno, este programa no tiene nada interesante, realicemos el famoso hola mundo. Debo confesar que es el _Hola Mundo_ más extrańo que he echo jaja.
 
@@ -53,7 +55,7 @@ Resistencia = (5v - 1,8 v)/0,015mA = 213,333...
 O sea una resistencia de 220 ohm. Pero había dicho que sólo necesitaba un led y la placa. Ajá acá va el truco, la arduino por medio del pin 13 y su pin GND que esta justo al lado tiene una resistencia de 220 ohm, lo que es ideal para encendeer el led, es como si la arduino pensara en nosotros :P.
 
 Entonces nos queda: 
-![Led](http://alumnos.informatica.utem.cl/~srocha/imagenes/Primeros%20pasos/cirLed.jpg "Led")
+![Led](imagenes/Primeros%20pasos/cirLed.jpg "Led")
 **(Ojo la _patita_ con dobles va al voltaje o la más larga)**
 
 ~~~{cpp}

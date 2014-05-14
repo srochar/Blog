@@ -3,12 +3,14 @@ tags: python,shutil,os,walk,copiar,ficheros
 
 Por acá al fin, después de una semana agotadora tengo tiempo para escribir un poquito. Les traigo un problema que nos planteó una empresa. 'Copiar todos los ficheros de cierta extensión de una carpeta y sus sub-carpetas a una nueva sin borrar los archivos originales manteniendo el árbol'. Hay varios lenguajes de programación que resuelven el problema.
 
+![Portada](imagenes/Copiar%20ficheros%20python/python.png "Python" )
+
 Un amigo y yo, partimos por la consola de Windows que es lo que quería en ese momento la empresa, pero se volvio complicado, era extrańo, no se entendía el código. Lo mejor era hacer un cambio de enfoque, es por eso que utilizamos python, que es un lenguaje muy fácil de leer y comprender, además su shell interactiva nos ayuda a simplificar ciertas partes del código.
 
 La solución sería; guardar en una lista los archivos de una árbol de carpetas, haciendo un filtro de la extensión, por opción guardaremos tambien la ruta de la carpeta. Luego recorrer la lista de archivos con filtro y por cada archivo, enviar a la nueva carpeta.
 
 Para esto crearé una carpeta con varios archivos de distintas extensiones y a dentro de varias carpetas. Este sera nuestro modelo. 
-![Consola](http://alumnos.informatica.utem.cl/~srocha/imagenes/Copiar%20ficheros%20python/modelo.jpg "Consola" )
+![Consola](imagenes/Copiar%20ficheros%20python/modelo.jpg "Consola" )
 
 Ya el primer desafío de obtener una lista de todos los ficheros que tienen las carpetas y sub-carpetas de la librería _os_, podemos ayudarnos con _os.walk(carpeta)_, la que nos devuelve una generador que se puede iterar, en cada iteración entrega una tupla con 3 valores:
 
@@ -86,6 +88,6 @@ for archivo in lista_archivos:
 ~~~
 
 Resultado:
-![Resultado](http://alumnos.informatica.utem.cl/~srocha/imagenes/Copiar%20ficheros%20python/resultado.jpg "Resultado")
+![Resultado](imagenes/Copiar%20ficheros%20python/resultado.jpg "Resultado")
 
 Si somos curiosos podríamos saber cuántos archivos con extensión pdf hay almacenados en el disco c:, d: y otros. O incluso copiar todos los archivos .jpg por ejemplo del disco c y luego borrarlos :P. Se los planteo. Saludos.

@@ -1,10 +1,11 @@
-layout: post.html
 title: Convertir String a int C++
 tags: C++,c
 
 Bueno acá va nuestro primer post.
 
 Cuando somos principiantes tenemos problemas con los tipos de datos; los string, char, punteros (uff que problemas), int, etc.
+
+![Portada](imagenes/Convertir-String-int-c++/C++.png "c++")
 
 Clásico de clásicos es convertir tipo de dato string a int, esto se puede solucionar fácil después que tenemos un poco más de experiencia, destaco que tampoco no soy un gran programador de c++ pero fue uno de los primeros lenguajes que conocí.
 

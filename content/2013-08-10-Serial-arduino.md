@@ -1,15 +1,16 @@
-layout: post.html
 title: Serial arduino
 tags: Serial,arduino,comunicacion,COM
 
 Si ya probaste el famoso [_hola mundo_](http://alumnos.informatica.utem.cl/~srocha/primeros-pasos-arduino.html "Primeros Pasos Arduino") en arduino (encender y apagar el led) acá les traigo algo un poco más avanzado: controlar cuándo encender el led, a través de la comunicación serial.
+
+![Portada](imagenes/Serial%20Arduino/portada.png "Monitor Serial")
 
 En el momemto que conectamos el cable usb de la arduino al computador, se genera un medio de comunación entre ambos dispositivos. El medio para la arduino se llama _Serial_ y en el computador se escucha el puerto _COM_. Hay distintos puertos _COM(COM1,COM2, etc)_, según el que se haya creado al momento de conectar la arduino. 
 
 Se puede enviar información a la arduino desde el pc o viceversa.
 
 Lo importante es como explotar la interacción, para ello el software de arduino tiene un programa que escucha el puerto _COM_ y también tiene la posibilidad de enviar información por él. Para la versión 1.0.5 del software con _crtl+m_ se abre el programa. 
-![COM3](http://alumnos.informatica.utem.cl/~srocha/imagenes/Serial%20Arduino/pantallaSerial.jpg "Serial COM")
+![COM3](imagenes/Serial%20Arduino/pantallaSerial.jpg "Serial COM")
 
 Es una pequeńa ventana que tiene varias opciones; enviar información, recibir información y cambiar el _speed_(del que hablaré más adelante). Esto sería por parte del software, veamos la arduino:
 
@@ -48,7 +49,7 @@ Cargamos a la arduino y habilitamos la comunicación serial en el software(_crtl
 
 Mi resultado: 
 
-![Serial resultado](http://alumnos.informatica.utem.cl/~srocha/imagenes/Serial%20Arduino/resultado.jpg "Mi resultado")
+![Serial resultado](imagenes/Serial%20Arduino/resultado.jpg "Mi resultado")
 
 Pero hagamos algo entretenido; juguemos con un led conectado al pin 13. Si recibe un 1 encienda un led y 0 apaga el led e informe qué hizo con el led. 
 

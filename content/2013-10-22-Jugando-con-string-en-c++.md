@@ -4,6 +4,7 @@ tags: string, c++
 En un ramo de la universidad tuvimos que usar c++ con string. Se volvio complicado cuando necesitaba separar el string por
 espacio o por otro caracter. En python esta función se llama split, que es muy fácil de usar y además viene implementada.
 Lastima que en c++ no exita, pero no me quede ahí, las implemente y les muestro los resultados.
+![Portada](imagenes/Jugando-con-string-en-c++/portadapng.png "Ejemplo python")
 
 El aburrimiento resulto que implementará otras dos funciones muy utilizadas, en conclusión creé:
 

@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = u'Sebastian Rocha'
 SITENAME = u'De todo un Seba'
-SITEURL = 'http://alumnos.informatica.utem.cl/~srocha'
+SITEURL = 'http://alumnos.informatica.utem.cl/~srocha/'
 
 TIMEZONE = 'Europe/Paris'
 
@@ -19,7 +19,9 @@ TRANSLATION_FEED_ATOM = None
 LINKS =  (('Pelican', 'http://getpelican.com/'),
           ('Python.org', 'http://python.org/'),
           ('Jinja2', 'http://jinja.pocoo.org/'),
-          ('You can modify those links in your config file', '#'),)
+          ('Pato','http://alumnos.informatica.utem.cl/~pperez/'),)
+
+USE_LINKS = True
 
 # Social widget
 SOCIAL = (('GitGub', 'https://github.com/srochar'),
@@ -30,9 +32,10 @@ DEFAULT_PAGINATION = 10
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
 
+PATH = 'content'
 THEME = 'pelican-cait'
 
-STATIC_PATHS = ['imagenes','Download']
+STATIC_PATHS = ['imagenes','Download','Drogas']
 
 CUSTOM_MENUITEMS = (('Blog', ''),
              ('Quién soy', 'pages/contacto'),)
@@ -48,4 +51,6 @@ CONTACTS = (('facebook', 'https://www.facebook.com/sebastian.rochareyes.1'),
 
 DISQUS_SITENAME = "detodounseba"
 GOOGLE_ANALYTICS = "UA-45057407-1"
+
+SUMMARY_MAX_LENGTH = 100
 

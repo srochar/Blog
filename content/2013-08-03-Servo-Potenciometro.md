@@ -19,7 +19,7 @@ Nuestro otro dispositivo es el mini-servo, lo mismo que el anterior posee 3 cabl
 El procedimiento es fácil leeremos los valores que tenga el potenciómetro y se los enviaremos al servo. Pero no es tan fácil llevarlo a código . Vamos a ir por parte, primero controlaremos nuestro potenciómetro.
 
 Realizamos las conexiones básicas: 
-![Conexión](http://alumnos.informatica.utem.cl/~srocha/imagenes/PotenciometroServo/cirPot.jpg "Circuito Potenciometro")
+![Conexión](imagenes/PotenciometroServo/cirPot.jpg "Circuito Potenciometro")
 
 ¿Qué vamos a hacer?
 
@@ -81,7 +81,7 @@ Delay() es una pequeña pausa en milisengundos, muy importante para que el poten
 
 Ahora que entendemos qué hace el código se lo enviamos a la arduino y habilitamos la comunicación serial. Resultados: 
 
-![Serial](http://alumnos.informatica.utem.cl/~srocha/imagenes/PotenciometroServo/resultadosPote.jpg "Resultados Potenciometro")
+![Serial](imagenes/PotenciometroServo/resultadosPote.jpg "Resultados Potenciometro")
 
 Tiene un problema este código, más bien sus resultados. Ponganse a análizar los valores que entrega portVal, si uno no mueve el potenciómetro varian los valores levemente en más o menos 1 sin que nosotros lo toquemos. Esto se llama ruido generado por el circuito. Pero tranquilos lo vamos a solucionar.
 
@@ -169,7 +169,7 @@ Para jugar con el mini-servo vamos a darles algunos ángulos básico, que gire 2
 
 Las conexiones:
 
-![Servo](http://alumnos.informatica.utem.cl/~srocha/imagenes/PotenciometroServo/cirServo.jpg "Circuito Servo")
+![Servo](imagenes/PotenciometroServo/cirServo.jpg "Circuito Servo")
 
 Para el código nos va ayudar la librería **Servo.h**. Instanciamos nuestro objeto de la librería después damos las acciones que tenga este objeto(iniciar, mover, leer, etc).
 
@@ -228,7 +228,7 @@ delay(500);
 Esto sería para nuestro servo, la librería **Servo.h** nos ayuda mucho y como ven es muy sencillo controlar. Ahora probemos los dispositivos al mismo tiempo :D.
 
 Circuito: 
-![Circuito final](http://alumnos.informatica.utem.cl/~srocha/imagenes/PotenciometroServo/cirTotal.jpg "Circuito final")
+![Circuito final](imagenes/PotenciometroServo/cirTotal.jpg "Circuito final")
 
 El código es una mezcla de ambos, optener el valor del potenciómetro y enviarlo al servo, pero recodemos que los valores varían de 0 a 1023 con un simple _map()_. Una función de arduino que cambia un valor en la proporción que indiquemos, o sea 0 sería 0º y 1023 son 180º.
 
@@ -278,6 +278,6 @@ void loop()
 ~~~
 
 Y la lectura **Serial** nos muestra:
-![Serial](http://alumnos.informatica.utem.cl/~srocha/imagenes/PotenciometroServo/resultadosTotal.jpg "Resultado Final")
+![Serial](imagenes/PotenciometroServo/resultadosTotal.jpg "Resultado Final")
 
 Listo el código funciona bien y se mueve sin problemas el servo. Dudas haganlas saber si puedo las respondo. Saludos
