@@ -32,7 +32,6 @@ def new_post(titulo, fecha = None):
         with open(fichero, 'w') as f:
             f.write(template.format(titulo = titulo))
         print('Se creo el nuevo post', fichero)
-        os.system('sublime-text {fichero}'.format(fichero = fichero))
 
 
 title = raw_input('Titulo del post: ')

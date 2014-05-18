@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = u'Sebastian Rocha'
 SITENAME = u'De todo un Seba'
-SITEURL = 'http://alumnos.informatica.utem.cl/~srocha/'
+SITEURL = 'http://alumnos.informatica.utem.cl/~srocha'
 
 TIMEZONE = 'Europe/Paris'
 
@@ -20,12 +20,6 @@ LINKS =  (('Pelican', 'http://getpelican.com/'),
           ('Python.org', 'http://python.org/'),
           ('Jinja2', 'http://jinja.pocoo.org/'),
           ('Pato','http://alumnos.informatica.utem.cl/~pperez/'),)
-
-USE_LINKS = True
-
-# Social widget
-SOCIAL = (('GitGub', 'https://github.com/srochar'),
-          ('Another social link', '#'),)
 
 DEFAULT_PAGINATION = 10
 
@@ -46,8 +40,7 @@ CONTACT_EMAIL = "Sebastian.rocha@ceinf.cl"
 
 CONTACTS = (('facebook', 'https://www.facebook.com/sebastian.rochareyes.1'),
             ('twitter', 'https://twitter.com/sebarocha_'),
-            ('github','https://github.com/srochar'),
-            ('endomondo','http://www.endomondo.com/profile/12168013'),)
+            ('github','https://github.com/srochar'),)
 
 DISQUS_SITENAME = "detodounseba"
 GOOGLE_ANALYTICS = "UA-45057407-1"
